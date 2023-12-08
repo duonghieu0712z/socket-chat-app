@@ -10,10 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Print environments
-        run:
-          echo "${{ secrets.MY_RENDER_SERVICE_ID }} ${{ secrets.MY_RENDER_API_KEY }}"
-      
       - name: Deploy to production
         uses: johnbeynon/render-deploy-action@v0.0.8
         with:
