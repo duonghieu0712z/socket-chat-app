@@ -15,14 +15,12 @@ io.on("connection", (socket) => {
     let user = {};
     socket.on("user", (data) => {
         connectUser(data.userName, socket);
-
         user = { ...data };
-        console.log(user);
         // io.emit("user", data);
     });
 
     socket.on("chat", (data) => {
-        console.log(user, data);
+        console.log({ ...user, ...data });
         io.emit("chat", { id: socket.id, ...user, ...data });
     });
 
