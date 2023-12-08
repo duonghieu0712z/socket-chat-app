@@ -13,10 +13,11 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
     let user = {};
-    socket.on("user", (data) => {
-        connectUser(data.userName, socket);
-        user = { ...data };
-        // io.emit("user", data);
+    socket.on("login", (data) => {
+        if (data.userName) {
+            connectUser(data.userName, socket);
+            refreshUser("login", data.userName);
+        }
     });
 
     socket.on("chat", (data) => {
@@ -25,7 +26,9 @@ io.on("connection", (socket) => {
     });
 
     socket.on("disconnect", () => {
+        const userName = socket.userName;
         disconnectUser(socket);
+        refreshUser("login", userName);
     });
 });
 
@@ -52,4 +55,11 @@ function disconnectUser(socket) {
         users.splice(users.indexOf(socket.username), 1);
         console.log("<Online Users>: ", users);
     }
+}
+
+function refreshUser(ev, userName) {
+    io.emit(ev, {
+        userName: userName ? `${userName} is coming` : "",
+        numberUsers: users.length,
+    });
 }
